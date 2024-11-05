@@ -1,4 +1,6 @@
-// pool of available freelancers from which to add
+/*  
+ list A: pool of available freelancers from which to populate the roster list.
+ */
 const pool = [
   { id: 1, name: "Dr. Slice", price: 25, occupation: "gardener" },
   { id: 2, name: "Dr. Pressure", price: 51, occupation: "programmer" },
@@ -9,28 +11,31 @@ const pool = [
   { id: 7, name: "Dr. Wire", price: 47, occupation: "teacher" },
   { id: 8, name: "Prof. Goose", price: 72, occupation: "driver" },
 ];
-const max = pool.length;
 
-// list roster, reflects listed freelancers, contains initial 2.
+/*  
+list B: roster, reflects displayed freelancers 
+gets populated periodically from list A:pool 
+ */
 let roster = [
   { id: 9, name: "Alice Wonderland", price: 30, occupation: "writer" },
   { id: 10, name: "Bob Marley", price: 50, occupation: "teacher" },
 ];
 
-// get random freelancer from list: pool
+/* get random freelancer from list: pool */
 function getFreelancer() {
   const freelancer = pool[Math.floor(Math.random() * freelancers.length)];
   return freelancer;
 }
 
-// start
+/* start app */
 function init() {
-  console.log("freelance forum init..");
   initRoster();
 }
 
-//starts interval roster update.
-// note: the intervals will stop when all freelancers in pool have been added to roster (displayed).
+/* 
+starts an interval update of roster list + display list (html table).
+note: interval update stops when list:pool of available freelancers is empty.
+*/
 function startRosterInterval() {
   console.log("start roster interval..");
 
@@ -43,12 +48,15 @@ function startRosterInterval() {
   }, 3000);
 }
 
-// end interval roster update.
+/* end interval roster update */
 function endRosterInterval(id) {
   clearInterval(id);
 }
 
-// iterates through roster list and populates, call to start roster update.
+/* 
+displays initial set of available freelancers.
+starts roster interval update. 
+*/
 function initRoster() {
   roster.forEach((item, i) => {
     console.log(item);
@@ -57,7 +65,10 @@ function initRoster() {
   startRosterInterval();
 }
 
-// pull a random freelancer object from list:pool and adds it to roster.
+/* 
+randomly select a freelancer from list A, and move to list B. 
+call: addRoster() to display new selection
+*/
 function getRandomRoster() {
   // use: splice() + array.concat() to update roster
   const random = Math.floor(Math.random() * pool.length) - 1;
@@ -66,7 +77,11 @@ function getRandomRoster() {
   addRoster(arr[0]);
 }
 
-// add new freelancer to roster
+/* 
+add new freelancer to roster list
+DOM: populates display table with row (tr) using html template.
+@param {object} freelancer
+*/
 function addRoster(freelancer) {
   const table = document.querySelector("#roster-table tbody");
   const tableRow = cloneTableItem();
@@ -83,19 +98,21 @@ function addRoster(freelancer) {
   ).innerHTML = `$${getAveragePrice()}`);
 }
 
-// clones table row element from html template
+/* clone table row element from html template 
+@return {DOM element} row <tr> to populate with new freelancer data.
+*/
 function cloneTableItem() {
   const temp = document
     .getElementById("roster-item-template")
     .content.querySelector("tr");
-  temp.querySelector(".roster-item-name").innerHTML = "poo!";
   const el = document.importNode(temp, true);
   return el;
 }
 
+/* calculates average price of all freelancers in roster 
+@return {integer}
+*/
 function getAveragePrice() {
-  console.log(`getAveragePrice, roster size: ${roster.length}`);
-
   const avg =
     roster.reduce((total, item, i) => {
       total += item.price;
@@ -104,9 +121,5 @@ function getAveragePrice() {
   return Math.round((avg * 100) / 100);
 }
 
-function endRoster() {
-  clearInterval(intervalId);
-}
-
-// start main
+/* start main */
 init();
